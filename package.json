@@ -6,8 +6,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "immutable": "^3.8.2",
     "next": "^6.1.2",
     "react": "^16.5.0",
-    "react-dom": "^16.5.0"
+    "react-dom": "^16.5.0",
+    "slate": "^0.40.2",
+    "slate-react": "^0.18.5"
   }
 }
