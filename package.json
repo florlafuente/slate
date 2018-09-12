@@ -1,13 +1,20 @@
 {
   "name": "create-next-example-app",
   "scripts": {
-    "dev": "next",
+    "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "immutable": "^3.8.2",
+    "mongodb": "^3.1.4",
+    "mongoose": "^5.2.14",
     "next": "^6.1.2",
+    "nodemon": "^1.18.4",
+    "path-match": "^1.2.4",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "slate": "^0.40.2",
