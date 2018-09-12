@@ -9,6 +9,20 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "@canner/slate-constant": "^1.5.0",
+    "@canner/slate-helper-block-list": "^1.5.0",
+    "@canner/slate-helper-block-quote": "^1.5.0",
+    "@canner/slate-icon-align": "^1.5.0",
+    "@canner/slate-icon-blockquote": "^1.5.0",
+    "@canner/slate-icon-bold": "^1.5.0",
+    "@canner/slate-icon-clean": "^1.5.0",
+    "@canner/slate-icon-code": "^1.5.0",
+    "@canner/slate-icon-header": "^1.5.0",
+    "@canner/slate-icon-italic": "^1.5.0",
+    "@canner/slate-icon-list": "^1.5.0",
+    "@canner/slate-icon-strikethrough": "^1.5.0",
+    "@canner/slate-icon-underline": "^1.5.0",
+    "@canner/slate-icon-undo": "^1.5.0",
     "immutable": "^3.8.2",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
@@ -18,6 +32,13 @@
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "slate": "^0.40.2",
-    "slate-react": "^0.18.5"
+    "slate-edit-blockquote": "^0.6.1",
+    "slate-edit-list": "^0.12.1",
+    "slate-react": "^0.18.5",
+    "slate-toolbar": "^1.5.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5"
   }
 }
