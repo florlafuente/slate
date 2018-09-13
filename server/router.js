@@ -14,6 +14,23 @@ router.get('/holis',
   }
 )
 
+router.post('/comments',
+  async (req, res, next) => {
+    try {
+      console.log(req)
+      const newComment = await (req.db.collection('comments').insertOne({
+        content: req.body.content
+      }))
+      res.status(200).json({
+        id: newComment.insertedId
+      })
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+
 // router.get('/search', (req, res) => {
 //   request
 //   .get('https://api.spotify.com/v1/search')

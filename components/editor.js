@@ -41,7 +41,8 @@ class MyEditor extends Component {
     this.state = {
       value: initialValue,
       selection: null,
-      showCommentForm: false
+      showCommentForm: false,
+      newComment: null
     }
   }
 
