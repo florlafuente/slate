@@ -2,8 +2,9 @@
   "verbose": true,
   "ignore": ["node_modules", ".next"],
   "watch": [
-    "server/router.js",
-    "server.js"
+    "router.js",
+    "server.js",
+    "pages/index.js"
   ],
   "ext": "js json"
 }
