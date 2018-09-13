@@ -35,7 +35,7 @@ try{
     next()
   })
 
-  // server.use('/api', routes(db));
+  server.use('/api', routes);
 
   // Server-side
   const route = pathMatch();
@@ -54,8 +54,7 @@ try{
   //   return app.render(req, res, '/album', params);
   // });
 
-  server.get('*', (req, res) => {    log.error(err)
-  
+  server.get('*', (req, res) => { 
     return handle(req, res);
   });
 

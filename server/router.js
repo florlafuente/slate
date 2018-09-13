@@ -4,19 +4,15 @@ const router = express.Router();
 // const request = require('superagent');
 // const async = require('async');
 
-module.exports = db => {
-
 router.get('/holis',
   async (req, res, next) => {
     try {
-    res.status(200).json({'Holis':'Carolis'});
+      res.status(200).json({'Holis':'Carolis'});
     } catch (err) {
       next(err)
     }
   }
 )
-
-}
 
 // router.get('/search', (req, res) => {
 //   request
@@ -78,3 +74,5 @@ router.get('/holis',
 //     res.status(200).json(response.body);
 //   });
 // });
+
+module.exports = router
