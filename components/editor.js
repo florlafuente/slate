@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Editor } from 'slate-react'
-import { Value, KeyUtils } from 'slate'
+import { Value, KeyUtils, Selection, Change } from 'slate'
 import Icon from 'react-icons-kit'
 import { bold } from 'react-icons-kit/feather/bold'
 import { italic } from 'react-icons-kit/feather/italic'
@@ -10,6 +10,7 @@ import CommentInput from './comment-input'
 import BoldMark from '../elements/bold-mark'
 import ItalicMark from '../elements/italic-mark'
 import HighlightMark from '../elements/highlight-mark'
+import CommentMark from '../elements/comment-mark'
 import ToolbarButton from '../elements/toolbar-button'
 
 const initialValue = Value.fromJSON({
@@ -42,7 +43,7 @@ class MyEditor extends Component {
       value: initialValue,
       selection: null,
       showCommentForm: false,
-      newComment: null
+      commentId: null
     }
   }
 
@@ -81,13 +82,26 @@ class MyEditor extends Component {
     const change = value.change().toggleMark('highlight')
     this.setState({
       showCommentForm: true,
-      selection: value.fragment.text
+      selection: value.selection.toJSON()
     }) 
     this.handleChange(change)
   }
 
+  setCommentId = (id) => {
+    const { value } = this.state
+    this.setState({
+      commentId: id
+    })
+    const change = value
+      .selection.fromJSON(this.state.selection)
+      .change().toggleMark('comment')
+    this.handleChange(value)
+  }
+
   renderMark = (props) => {
     switch (props.mark.type) {
+      case 'comment' :
+        return <CommentMark  id={this.state.commentId} {...props} />
       case 'highlight':
       return <HighlightMark {...props} />
       case 'bold':
@@ -122,7 +136,8 @@ class MyEditor extends Component {
           renderMark={this.renderMark}
         />
         {this.state.showCommentForm &&
-          <CommentInput />
+          <CommentInput
+            setCommentId={this.setCommentId} />
         }
       </Fragment>
     )
