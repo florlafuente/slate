@@ -17,7 +17,6 @@ router.get('/holis',
 router.post('/comments',
   async (req, res, next) => {
     try {
-      console.log(req)
       const newComment = await (req.db.collection('comments').insertOne({
         content: req.body.content
       }))

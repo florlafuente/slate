@@ -11,9 +11,9 @@ export default class extends Component {
     try {
       const newComment = await(await fetch('api/comments', {
         method: 'POST',
-        body: {
+        body: JSON.stringify({
           content: this.state.comment
-        }
+        })
       })).json()
       this.props.setCommentId(newComment.id)
     } catch(err) {

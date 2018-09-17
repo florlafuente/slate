@@ -92,10 +92,10 @@ class MyEditor extends Component {
     this.setState({
       commentId: id
     })
-    const change = value
-      .selection.fromJSON(this.state.selection)
-      .change().toggleMark('comment')
-    this.handleChange(value)
+    Selection.fromJSON(this.state.selection)
+    // const change = value
+    //   .toggleMark('comment')
+    // this.handleChange(change)
   }
 
   renderMark = (props) => {

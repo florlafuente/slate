@@ -3,8 +3,7 @@
   "ignore": ["node_modules", ".next"],
   "watch": [
     "server/router.js",
-    "server.js",
-    "pages/index.js"
+    "server.js"
   ],
   "ext": "js json"
 }
