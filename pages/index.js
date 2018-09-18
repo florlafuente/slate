@@ -16,7 +16,7 @@ const Home = () => (
     <MyEditor />
     <style jsx>{`
       .main {
-        padding: 10px 100px;
+        padding: 10px 150px;
       }
     `}</style>
   </div>

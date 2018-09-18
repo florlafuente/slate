@@ -118,17 +118,10 @@ class MyEditor extends Component {
       <Fragment>
         <Toolbar>
           <ToolbarButton
-            function={(e) => this.onMarkClick(e, 'bold')}>
-            <Icon icon={bold} />
-          </ToolbarButton>
-          <ToolbarButton
-            function={(e) => this.onMarkClick(e, 'italic')}>
-            <Icon icon={italic} />
-          </ToolbarButton>
-          <ToolbarButton
             function={(e) => this.handleHighlight(e)}>
             <Icon icon={ic_comment} />
           </ToolbarButton>
+          <span>Agregar comentario</span>
         </Toolbar>
         <Editor
           value={this.state.value}
