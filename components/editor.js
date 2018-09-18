@@ -37,7 +37,7 @@ class MyEditor extends Component {
     super(props)
     KeyUtils.resetGenerator()
     this.state = {
-      value: initialValue,
+      value: null,
       selection: null,
       showToolbar: false,
       showCommentForm: false,
@@ -54,6 +54,13 @@ class MyEditor extends Component {
         isAtomic: true,
       }
     }
+  }
+
+  componentDidMount () {
+    const savedValue = localStorage.getItem('editor')
+    this.setState({
+      value: savedValue ? Value.fromJSON(JSON.parse(savedValue)) : initialValue
+    }) 
   }
 
   componentDidUpdate () {
@@ -109,6 +116,9 @@ class MyEditor extends Component {
   }
 
   setCommentId = (id) => {
+    this.setState({
+      showCommentForm: false
+    })
     const { value, selection } = this.state
     const range = Range.fromJSON(selection).toJSON()
     const mark = Mark.create({
@@ -151,7 +161,7 @@ class MyEditor extends Component {
           </ToolbarButton>
         </Toolbar>
       }
-        
+      { this.state.value &&
         <div
           ref={this.myEditor}>
           <Editor
@@ -162,6 +172,7 @@ class MyEditor extends Component {
             onBlur={() => this.setState({ showToolbar: false })}
           />
         </div>
+      }
         {this.state.showCommentForm &&
           <CommentInput
             setCommentId={this.setCommentId} />
