@@ -1,6 +1,6 @@
 import React, { Component, Fragment, createRef } from 'react'
 import { Editor, findRange } from 'slate-react'
-import { Value, KeyUtils, Range, Change } from 'slate'
+import { Value, KeyUtils, Range, Change, Mark } from 'slate'
 import Icon from 'react-icons-kit'
 import { getVisibleSelectionRect } from 'get-selection-range'
 import {ic_comment} from 'react-icons-kit/md/ic_comment'
@@ -41,7 +41,6 @@ class MyEditor extends Component {
       selection: null,
       showToolbar: false,
       showCommentForm: false,
-      commentId: null,
       top: null,
       left: null
     }
@@ -86,9 +85,10 @@ class MyEditor extends Component {
     }
   }
 
-  handleChange = ({ value }) => (
+  handleChange = ({ value }) => {
     this.setState({ value })
-  )
+    localStorage.setItem('editor', JSON.stringify(value.toJSON())) 
+  }
 
   onMarkClick = (e, type) => {
     e.preventDefault()
@@ -110,22 +110,18 @@ class MyEditor extends Component {
 
   setCommentId = (id) => {
     const { value, selection } = this.state
-    this.setState({
-      commentId: id
-    })
-    const decorations = []
-    const range = Range.fromJSON(this.state.selection).toJSON()
-    decorations.push({
-      anchor: range.anchor,
-      focus: range.focus,
-      mark: { type: 'comment' }
-    })
+    const range = Range.fromJSON(selection).toJSON()
+    const mark = Mark.create({
+      data: {
+        'data-id': id
+      },
+      'type': 'comment'
+      })
     const change = value
       .change()
-      .setOperationFlag('save', false)
-      .setValue({ decorations })
-      .setOperationFlag('save', true)
-    
+      .select(range)
+      .toggleMark({ type: 'highlight' })
+      .addMark(mark)
       this.handleChange(change)
   }
 
