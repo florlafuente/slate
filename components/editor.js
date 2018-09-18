@@ -1,6 +1,6 @@
 import React, { Component, Fragment, createRef } from 'react'
-import { Editor } from 'slate-react'
-import { Value, KeyUtils, Selection, Change } from 'slate'
+import { Editor, findRange } from 'slate-react'
+import { Value, KeyUtils, Range, Change } from 'slate'
 import Icon from 'react-icons-kit'
 import { getVisibleSelectionRect } from 'get-selection-range'
 import {ic_comment} from 'react-icons-kit/md/ic_comment'
@@ -49,8 +49,15 @@ class MyEditor extends Component {
     this.toolbar = createRef()
   }
 
+  schema = {
+    marks: {
+      comment: {
+        isAtomic: true,
+      }
+    }
+  }
+
   componentDidUpdate () {
-    const { value } = this.state
     const rect = getVisibleSelectionRect()
     if (!rect) { return }
     if (rect.width === 0 && this.state.showToolbar) {
@@ -75,7 +82,7 @@ class MyEditor extends Component {
         showToolbar: true,
         left: left,
         top: top
-      }, () => console.log(this.state))
+      })
     }
   }
 
@@ -102,14 +109,24 @@ class MyEditor extends Component {
   }
 
   setCommentId = (id) => {
-    const { value } = this.state
+    const { value, selection } = this.state
     this.setState({
       commentId: id
     })
-    Selection.fromJSON(this.state.selection)
-    // const change = value
-    //   .toggleMark('comment')
-    // this.handleChange(change)
+    const decorations = []
+    const range = Range.fromJSON(this.state.selection).toJSON()
+    decorations.push({
+      anchor: range.anchor,
+      focus: range.focus,
+      mark: { type: 'comment' }
+    })
+    const change = value
+      .change()
+      .setOperationFlag('save', false)
+      .setValue({ decorations })
+      .setOperationFlag('save', true)
+    
+      this.handleChange(change)
   }
 
   renderMark = (props) => {
@@ -143,6 +160,7 @@ class MyEditor extends Component {
           ref={this.myEditor}>
           <Editor
             value={this.state.value}
+            schema={this.schema}
             onChange={this.handleChange}
             renderMark={this.renderMark}
             onBlur={() => this.setState({ showToolbar: false })}
