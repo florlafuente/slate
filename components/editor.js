@@ -1,14 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment, createRef } from 'react'
 import { Editor } from 'slate-react'
 import { Value, KeyUtils, Selection, Change } from 'slate'
 import Icon from 'react-icons-kit'
-import { bold } from 'react-icons-kit/feather/bold'
-import { italic } from 'react-icons-kit/feather/italic'
+import { getVisibleSelectionRect } from 'get-selection-range'
 import {ic_comment} from 'react-icons-kit/md/ic_comment'
 import Toolbar from './toolbar'
 import CommentInput from './comment-input'
-import BoldMark from '../elements/bold-mark'
-import ItalicMark from '../elements/italic-mark'
 import HighlightMark from '../elements/highlight-mark'
 import CommentMark from '../elements/comment-mark'
 import ToolbarButton from '../elements/toolbar-button'
@@ -42,32 +39,49 @@ class MyEditor extends Component {
     this.state = {
       value: initialValue,
       selection: null,
+      showToolbar: false,
       showCommentForm: false,
-      commentId: null
+      commentId: null,
+      top: null,
+      left: null
+    }
+    this.myEditor = createRef()
+    this.toolbar = createRef()
+  }
+
+  componentDidUpdate () {
+    const { value } = this.state
+    const rect = getVisibleSelectionRect()
+    if (!rect) { return }
+    if (rect.width === 0 && this.state.showToolbar) {
+      this.setState({ showToolbar: false })
+    }
+    if (rect && rect.width > 0 && !this.state.showToolbar) {
+      const containerBound = this.myEditor.current.getBoundingClientRect()
+      const {
+        left: containerBoundLeft,
+        top: containerBoundTop
+      } = containerBound
+      const left =
+        rect.left +
+        rect.width / 2 -
+        containerBoundLeft -
+        150 / 2
+      const top =
+        rect.top -
+        containerBoundTop -
+        30
+      this.setState({
+        showToolbar: true,
+        left: left,
+        top: top
+      }, () => console.log(this.state))
     }
   }
 
   handleChange = ({ value }) => (
     this.setState({ value })
   )
-
-  handleKeyDown = (event, change) => {
-    if (!event.ctrlKey) return
-    event.preventDefault()
-    switch (event.key) {
-    case 'b': {
-      change.toggleMark('bold')
-      return true
-      }
-    case 'i': {
-      change.toggleMark('italic')
-      return true
-      }
-    default: {
-      return
-      }
-    }
-  }
 
   onMarkClick = (e, type) => {
     e.preventDefault()
@@ -104,10 +118,6 @@ class MyEditor extends Component {
         return <CommentMark  id={this.state.commentId} {...props} />
       case 'highlight':
       return <HighlightMark {...props} />
-      case 'bold':
-      return <BoldMark {...props} />
-      case 'italic':
-      return <ItalicMark {...props} />
       default:
         return
     }
@@ -116,18 +126,28 @@ class MyEditor extends Component {
   render() {
     return (
       <Fragment>
-        <Toolbar>
+      {this.state.showToolbar &&
+        <Toolbar
+          ref={this.toolbar}
+          top={this.state.top}
+          left={this.state.left}
+          >
           <ToolbarButton
             function={(e) => this.handleHighlight(e)}>
-            <Icon icon={ic_comment} />
+            <span>Agregar comentario</span>
           </ToolbarButton>
-          <span>Agregar comentario</span>
         </Toolbar>
-        <Editor
-          value={this.state.value}
-          onChange={this.handleChange}
-          renderMark={this.renderMark}
-        />
+      }
+        
+        <div
+          ref={this.myEditor}>
+          <Editor
+            value={this.state.value}
+            onChange={this.handleChange}
+            renderMark={this.renderMark}
+            onBlur={() => this.setState({ showToolbar: false })}
+          />
+        </div>
         {this.state.showCommentForm &&
           <CommentInput
             setCommentId={this.setCommentId} />
