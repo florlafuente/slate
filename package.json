@@ -9,7 +9,9 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "get-selection-range": "^0.1.0",
     "immutable": "^3.8.2",
+    "isomorphic-unfetch": "^2.1.1",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
     "next": "^6.1.2",
@@ -17,6 +19,7 @@
     "path-match": "^1.2.4",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
+    "react-icons-kit": "^1.1.7",
     "slate": "^0.40.2",
     "slate-react": "^0.18.5"
   }
