@@ -29,7 +29,7 @@ const ObjectID = require('mongodb').ObjectID
     .get(async (req, res, next) => {
       try {
         const result = await (req.db.collection('documents').findOne(
-          { _id: req.params.id }
+          { _id: ObjectID(req.params.id) }
         ))
         res.status(200).json(result)
       } catch (err) {
@@ -39,7 +39,7 @@ const ObjectID = require('mongodb').ObjectID
     .put(async (req, res, next) => {
       try {
         const updateDocument = await (req.db.collection('documents').updateOne(
-          { _id: req.params.id },
+          { _id: ObjectID(req.params.id) },
           { $set: {
             content: req.body.content
           }}
@@ -52,7 +52,7 @@ const ObjectID = require('mongodb').ObjectID
     .delete( async (req, res, next) => {
       try {
         const deleteDocument = await (req.db.collection('documents').deleteOne({
-          _id: req.params.id
+          _id: ObjectID(req.params.id)
         }))
         res.status(200).json(deleteDocument)
       } catch (err) {
@@ -98,7 +98,7 @@ const ObjectID = require('mongodb').ObjectID
     .get(async (req, res, next) => {
       try {
         const result = await (req.db.collection('comments').findOne(
-          { _id: req.params.id }
+          { _id: ObjectID(req.params.id) }
         ))
         res.status(200).json(result)
       } catch (err) {
@@ -108,7 +108,7 @@ const ObjectID = require('mongodb').ObjectID
     .put(async (req, res, next) => {
       try {
         const updateComment = await (req.db.collection('comments').updateOne(
-          { _id: req.params.id },
+          { _id: ObjectID(req.params.id) },
           { $set: {
             content: req.body.content
           }}
@@ -121,7 +121,7 @@ const ObjectID = require('mongodb').ObjectID
     .delete( async (req, res, next) => {
       try {
         const deleteComment = await (req.db.collection('comments').deleteOne({
-          _id: req.params.id
+          _id: ObjectID(req.params.id)
         }))
         res.status(200).json(deleteDocument)
       } catch (err) {
