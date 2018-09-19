@@ -1,9 +1,8 @@
 import React, { Component, Fragment, createRef } from 'react'
 import { Editor, findRange } from 'slate-react'
 import { Value, KeyUtils, Range, Change, Mark } from 'slate'
-import Icon from 'react-icons-kit'
+import fetch from 'isomorphic-unfetch'
 import { getVisibleSelectionRect } from 'get-selection-range'
-import {ic_comment} from 'react-icons-kit/md/ic_comment'
 import Toolbar from './toolbar'
 import CommentInput from './comment-input'
 import HighlightMark from '../elements/highlight-mark'
@@ -37,6 +36,7 @@ class MyEditor extends Component {
     super(props)
     KeyUtils.resetGenerator()
     this.state = {
+      documentId: null,
       value: null,
       selection: null,
       showToolbar: false,
@@ -56,11 +56,17 @@ class MyEditor extends Component {
     }
   }
 
-  componentDidMount () {
-    const savedValue = localStorage.getItem('editor')
-    this.setState({
-      value: savedValue ? Value.fromJSON(JSON.parse(savedValue)) : initialValue
-    }) 
+  async componentDidMount () {
+    try {
+      const result = await(await fetch('api/documents')).json()
+      console.log(result[0])
+      this.setState({
+        documentId: result[0]._id,
+        value: result ? Value.fromJSON(result[0].content) : initialValue
+      })
+    } catch(err) {
+      console.error(err)
+    }
   }
 
   componentDidUpdate () {
@@ -92,9 +98,25 @@ class MyEditor extends Component {
     }
   }
 
-  handleChange = ({ value }) => {
-    this.setState({ value })
-    localStorage.setItem('editor', JSON.stringify(value.toJSON())) 
+  handleChange = async ({ value }) => {
+    if (value.document != this.state.value.document) {
+      const content = value.toJSON()
+      try {
+        const updatedContent = await(await fetch (`/api/documents/${this.state.documentId}`, {
+          'method': 'PUT',
+          'headers': {
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify({
+            'content': content
+          })
+        })).json()
+        console.log(updatedContent)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    this.setState({ value }) 
   }
 
   onMarkClick = (e, type) => {
