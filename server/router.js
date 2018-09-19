@@ -1,33 +1,133 @@
 const express = require('express');
 const router = express.Router();
+const ObjectID = require('mongodb').ObjectID
 
 // const request = require('superagent');
 // const async = require('async');
 
-router.get('/holis',
-  async (req, res, next) => {
-    try {
-      res.status(200).json({'Holis':'Carolis'});
-    } catch (err) {
-      next(err)
-    }
-  }
-)
+  router.route('/documents')
+    .get( async(req, res, next) => {
+      try {
+        const allDocuments = await (req.db.collection('documents').find()).toArray()
+        res.status(200).json(allDocuments)
+      } catch(err) {
+        next(err)
+      }
+    })
+    .post(async (req, res, next) => {
+      try {
+        const newDocument = await (req.db.collection('documents').insertOne({
+          content: req.body.content
+        }))
+        res.status(201).json(newDocument)
+      } catch (err) {
+        next(err)
+      }
+    })
 
-router.post('/comments',
-  async (req, res, next) => {
-    try {
-      const newComment = await (req.db.collection('comments').insertOne({
-        content: req.body.content
-      }))
-      res.status(200).json({
-        id: newComment.insertedId
-      })
-    } catch (err) {
-      next(err)
+  router.route('/documents/:id')
+    .get(async (req, res, next) => {
+      try {
+        const result = await (req.db.collection('documents').findOne(
+          { _id: ObjectID(req.params.id) }
+        ))
+        res.status(200).json(result)
+      } catch (err) {
+        next(err)
+      }
+    })
+    .put(async (req, res, next) => {
+      try {
+        const updateDocument = await (req.db.collection('documents').updateOne(
+          { _id: ObjectID(req.params.id) },
+          { $set: {
+            content: req.body.content
+          }}
+        ))
+        res.status(200).json(updateDocument)
+      } catch (err) {
+        next(err)
+      }
+    })
+    .delete( async (req, res, next) => {
+      try {
+        const deleteDocument = await (req.db.collection('documents').deleteOne({
+          _id: ObjectID(req.params.id)
+        }))
+        res.status(200).json(deleteDocument)
+      } catch (err) {
+        next(err)
+      }
+    })
+
+  router.route('/comments')
+    .get(async (req, res, next) => {
+      try {
+        const query = {}
+        if (req.query.ids) {
+          query._id = { 
+            $in: req.query.ids
+              .split(',')
+              .map((id) => ObjectID(id))
+          }
+        }
+        const results = await (req.db.collection('comments').find(query)).toArray()
+        res.status(200).json({
+          results: results
+        })
+      } catch (err) {
+        next(err)
+      }
+    })
+    .post(async (req, res, next) => {
+      try {
+        const newComment = await (req.db.collection('comments').insertOne({
+          content: req.body.content,
+          document: req.body.document
+        }))
+        res.status(200).json({
+          id: newComment.insertedId
+        })
+      } catch (err) {
+        next(err)
+      }
     }
-  }
-)
+  )
+
+  router.route('/comments/:id')
+    .get(async (req, res, next) => {
+      try {
+        const result = await (req.db.collection('comments').findOne(
+          { _id: ObjectID(req.params.id) }
+        ))
+        res.status(200).json(result)
+      } catch (err) {
+        next(err)
+      }
+    })
+    .put(async (req, res, next) => {
+      try {
+        const updateComment = await (req.db.collection('comments').updateOne(
+          { _id: ObjectID(req.params.id) },
+          { $set: {
+            content: req.body.content
+          }}
+        ))
+        res.status(200).json(updateDocument)
+      } catch (err) {
+        next(err)
+      }
+    })
+    .delete( async (req, res, next) => {
+      try {
+        const deleteComment = await (req.db.collection('comments').deleteOne({
+          _id: ObjectID(req.params.id)
+        }))
+        res.status(200).json(deleteDocument)
+      } catch (err) {
+        next(err)
+      }
+    })
 
 
 // router.get('/search', (req, res) => {
