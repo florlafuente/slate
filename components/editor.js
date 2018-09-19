@@ -197,6 +197,7 @@ class MyEditor extends Component {
       }
         {this.state.showCommentForm &&
           <CommentInput
+            top={this.state.top}
             setCommentId={this.setCommentId} />
         }
       </Fragment>

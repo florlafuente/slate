@@ -1,7 +1,7 @@
 import React from 'react'
-import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import Head from '../components/head'
+
 const MyEditor = dynamic(
   import('../components/editor'),
   {
@@ -16,7 +16,10 @@ const Home = () => (
     <MyEditor />
     <style jsx>{`
       .main {
-        padding: 30px 150px;
+        padding: 30px 342px 0 160px;
+        font-family: 'Roboto', sans-serif;
+        color: #203340;
+        box-sizing: border-box;
       }
     `}</style>
   </div>

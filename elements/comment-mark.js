@@ -5,7 +5,7 @@ const CommentMark = (props) => (
     {props.children}
     <style jsx>{`
       .comment {
-        background-color: yellow;
+        background-color: #e3effa;
       }
     `}</style>
   </span>

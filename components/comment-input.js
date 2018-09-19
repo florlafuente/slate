@@ -23,16 +23,65 @@ export default class extends Component {
 
   render () {
     return (
-      <form onSubmit={this.handleFetch}>
-        <label htmlFor={'comment'}>Ingresa tu comentario
-        <input
-          type='text'
-          name='comment'
-          onChange={(e) => this.setState({ comment: e.target.value })}
-          value={this.state.comment}/>
-        </label>
-        <input type='submit' value='Enviar comentario' />
-      </form>
+      <div className='comment-wrapper'>
+        <form className='comment-form' onSubmit={this.handleFetch}>
+          <label htmlFor={'comment'}>
+            <span className='comment-label'>Agregar comentario</span>
+            <textarea
+              placeholder='Tu comentario'
+              name='comment'
+              onChange={(e) => this.setState({ comment: e.target.value })}
+              className='comment-textarea'
+              value={this.state.comment}/>
+          </label>
+          <input className='button-submit' type='submit' value='Enviar comentario' />
+        </form>
+        <style jsx>{`
+          .comment-wrapper {
+            position: absolute;
+            top: ${ this.props.top + 'px' };
+            right: 29px;
+            width: 300px;
+            height: 305px;
+            border-radius: 3px;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+            border: solid 1px #dae1e7;
+          }
+          .comment-label {
+            box-sizing: border-box;
+            width: 100%;
+            display: block;
+            height: 40px;
+            padding: 12px 18px;
+            background-color: #5c97bc;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+          }
+          .comment-textarea {
+            box-sizing: border-box;
+            border: none;
+            width: 100%;
+            height: 209px;
+            padding: 12px 18px;
+            font-family: 'Roboto', sans-serif;
+            resize: none;
+          }
+          .button-submit {
+            box-sizing: border-box;
+            width: 100%;
+            display: block;
+            height: 55px;
+            padding: 20px 18px;
+            color: #5c97bc;
+            border: none;
+            border-top: 1px solid #dae1e7;
+            background-color: #FFF;
+            text-align: left;
+          }
+        `}</style>
+      </div>
     )
   }
 }
