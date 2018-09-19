@@ -5,7 +5,7 @@ const HighlightMark = (props) => (
     {props.children}
     <style jsx>{`
       .highlight {
-        background-color: yellow;
+        background-color: #e3effa;
       }
     `}</style>
   </span>
