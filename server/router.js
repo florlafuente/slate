@@ -4,15 +4,60 @@ const router = express.Router();
 // const request = require('superagent');
 // const async = require('async');
 
-router.get('/holis',
-  async (req, res, next) => {
+router.route('/document')
+  .get( async(req, res, next) => {
     try {
-      res.status(200).json({'Holis':'Carolis'});
+      const allDocuments = await (req.db.collection('documents').find({}))
+      res.status(200).json(allDocuments)
+    } catch(err) {
+      next(err)
+    }
+  })
+  .post(async (req, res, next) => {
+    try {
+      const newDocument = await (req.db.collection('documents').insertOne({
+        content: req.body.content
+      }))
+      res.status(201).json(newDocument)
     } catch (err) {
       next(err)
     }
-  }
-)
+  })
+
+  router.route('/document/:id')
+  .get(async (req, res, next) => {
+    try {
+      const result = await (req.db.collection('documents').findOne(
+        { _id: req.params.id }
+      ))
+      res.status(200).json(result)
+    } catch (err) {
+      next(err)
+    }
+  })
+  .put(async (req, res, next) => {
+    try {
+      const updateDocument = await (req.db.collection('documents').updateOne(
+        { _id: req.params.id },
+        { $set: {
+          content: req.body.content
+        }}
+      ))
+      res.status(200).json(updateDocument)
+    } catch (err) {
+      next(err)
+    }
+  })
+  .delete( async (req, res, next) => {
+    try {
+      const deleteDocument = await (req.db.collection('documents').deleteOne({
+        _id: req.params.id
+      }))
+      res.status(200).json(deleteDocument)
+    } catch (err) {
+      next(err)
+    }
+  })
 
 router.post('/comments',
   async (req, res, next) => {
