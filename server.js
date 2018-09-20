@@ -4,13 +4,14 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const path = require('path');
 
+require('dotenv').config()
 const dev = process.env.NODE_ENV !== 'production';
 const next = require('next');
 const pathMatch = require('path-match');
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const { parse } = require('url');
-const MONGO_URL = 'mongodb://localhost:27017/testing'
+const MONGO_URL = process.env.MONGO_URL
 const dbName = 'testing'
 const routes = require('./server/router.js');
 
