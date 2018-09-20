@@ -4,6 +4,7 @@ import { Value, KeyUtils, Range, Change, Mark } from 'slate'
 import fetch from 'isomorphic-unfetch'
 import { getVisibleSelectionRect } from 'get-selection-range'
 import Toolbar from './toolbar'
+import CommentsGrid from './comments-grid'
 import CommentInput from './comment-input'
 import HighlightMark from '../elements/highlight-mark'
 import CommentMark from '../elements/comment-mark'
@@ -133,6 +134,7 @@ class MyEditor extends Component {
     const change = value.change().toggleMark('highlight')
     this.setState({
       showCommentForm: true,
+      comments: null,
       selection: value.selection.toJSON()
     }) 
     this.handleChange(change)
@@ -175,10 +177,11 @@ class MyEditor extends Component {
   }
 
   fetchComments = (id) => async (e) => {
+    e.preventDefault()
     try {
       const comments = await( await fetch(`/api/comments?ids=${this.state.commentsIds}`)).json()
       this.setState({
-        comments: comments
+        comments: comments.results
       })
     } catch (err) {
       console.error(err)
@@ -206,6 +209,9 @@ class MyEditor extends Component {
       <Fragment>
       {this.state.commentsIds.length > 0 &&
         <CommentCounter count={this.state.commentsIds.length} top={this.state.top} />
+      }
+      { this.state.comments && this.state.comments.length > 0 &&
+        <CommentsGrid comments={this.state.comments} />
       }
       {this.state.showToolbar &&
         <Toolbar
