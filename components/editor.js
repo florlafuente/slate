@@ -4,6 +4,7 @@ import { Value, KeyUtils, Range, Change, Mark } from 'slate'
 import fetch from 'isomorphic-unfetch'
 import { getVisibleSelectionRect } from 'get-selection-range'
 import Toolbar from './toolbar'
+import CommentsGrid from './comments-grid'
 import CommentInput from './comment-input'
 import HighlightMark from '../elements/highlight-mark'
 import CommentMark from '../elements/comment-mark'
@@ -42,9 +43,10 @@ class MyEditor extends Component {
       selection: null,
       showToolbar: false,
       showCommentForm: false,
-      commentCount: 0,
       top: null,
-      left: null
+      left: null,
+      commentsIds: [],
+      comments: null
     }
     this.myEditor = createRef()
     this.toolbar = createRef()
@@ -132,6 +134,7 @@ class MyEditor extends Component {
     const change = value.change().toggleMark('highlight')
     this.setState({
       showCommentForm: true,
+      comments: null,
       selection: value.selection.toJSON()
     }) 
     this.handleChange(change)
@@ -157,22 +160,34 @@ class MyEditor extends Component {
       this.handleChange(change)
   }
 
-  onCommentHoverIn = (e) => {
+  onCommentHoverIn = (id) => (e) => {
     const top = e.screenY - 145
     this.setState((prevState) => {
       return {
-        commentCount: prevState.commentCount + 1,
+        commentsIds: prevState.commentsIds.concat(id),
         top: top 
       }
-    })
+    }, () => console.log(this.state.commentsIds))
   }
 
   onCommentHoverOut = (e) => {
     this.setState({
-      commentCount: 0
+      commentsIds: []
     })
   }
 
+  fetchComments = (id) => async (e) => {
+    e.preventDefault()
+    try {
+      const comments = await( await fetch(`/api/comments?ids=${this.state.commentsIds}`)).json()
+      this.setState({
+        comments: comments.results
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+    
   renderMark = (props) => {
     switch (props.mark.type) {
       case 'comment' :
@@ -180,6 +195,7 @@ class MyEditor extends Component {
           id={props.mark.toJSON().data['data-id']}
           onMouseEnter={this.onCommentHoverIn}
           onMouseLeave={this.onCommentHoverOut}
+          onClick={this.fetchComments}
           {...props} />
       case 'highlight':
       return <HighlightMark {...props} />
@@ -191,8 +207,11 @@ class MyEditor extends Component {
   render() {
     return (
       <Fragment>
-      {this.state.commentCount > 0 &&
-        <CommentCounter count={this.state.commentCount} top={this.state.top} />
+      {this.state.commentsIds.length > 0 &&
+        <CommentCounter count={this.state.commentsIds.length} top={this.state.top} />
+      }
+      { this.state.comments && this.state.comments.length > 0 &&
+        <CommentsGrid comments={this.state.comments} />
       }
       {this.state.showToolbar &&
         <Toolbar
@@ -221,7 +240,8 @@ class MyEditor extends Component {
         {this.state.showCommentForm &&
           <CommentInput
             top={this.state.top}
-            setCommentId={this.setCommentId} />
+            setCommentId={this.setCommentId}
+            documentId={this.state.documentId} />
         }
       </Fragment>
     )

@@ -84,7 +84,7 @@ const ObjectID = require('mongodb').ObjectID
       try {
         const newComment = await (req.db.collection('comments').insertOne({
           content: req.body.content,
-          document: req.body.document
+          document: ObjectID(req.body.document)
         }))
         res.status(200).json({
           id: newComment.insertedId
