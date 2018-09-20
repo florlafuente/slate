@@ -41,6 +41,7 @@ class MyEditor extends Component {
       selection: null,
       showToolbar: false,
       showCommentForm: false,
+      commentCount: 0,
       top: null,
       left: null
     }
@@ -59,7 +60,6 @@ class MyEditor extends Component {
   async componentDidMount () {
     try {
       const result = await(await fetch('api/documents')).json()
-      console.log(result[0])
       this.setState({
         documentId: result[0]._id,
         value: result ? Value.fromJSON(result[0].content) : initialValue
@@ -111,7 +111,6 @@ class MyEditor extends Component {
             'content': content
           })
         })).json()
-        console.log(updatedContent)
       } catch (err) {
         console.error(err)
       }
@@ -157,10 +156,28 @@ class MyEditor extends Component {
       this.handleChange(change)
   }
 
+  onCommentHoverIn = () => {
+    this.setState((prevState) => {
+      return {
+        commentCount: prevState.commentCount + 1
+      }
+    })
+  }
+
+  onCommentHoverOut = () => {
+    this.setState({
+      commentCount: 0
+    })
+  }
+
   renderMark = (props) => {
     switch (props.mark.type) {
       case 'comment' :
-        return <CommentMark  id={this.state.commentId} {...props} />
+        return <CommentMark
+          id={props.mark.toJSON().data['data-id']}
+          onMouseEnter={this.onCommentHoverIn}
+          onMouseLeave={this.onCommentHoverOut}
+          {...props} />
       case 'highlight':
       return <HighlightMark {...props} />
       default:
@@ -171,6 +188,7 @@ class MyEditor extends Component {
   render() {
     return (
       <Fragment>
+      <h1>{this.state.commentCount}</h1>
       {this.state.showToolbar &&
         <Toolbar
           ref={this.toolbar}
