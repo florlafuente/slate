@@ -8,6 +8,7 @@ import CommentInput from './comment-input'
 import HighlightMark from '../elements/highlight-mark'
 import CommentMark from '../elements/comment-mark'
 import ToolbarButton from '../elements/toolbar-button'
+import CommentCounter from '../elements/comment-counter'
 
 const initialValue = Value.fromJSON({
   document: {
@@ -156,15 +157,17 @@ class MyEditor extends Component {
       this.handleChange(change)
   }
 
-  onCommentHoverIn = () => {
+  onCommentHoverIn = (e) => {
+    const top = e.screenY - 145
     this.setState((prevState) => {
       return {
-        commentCount: prevState.commentCount + 1
+        commentCount: prevState.commentCount + 1,
+        top: top 
       }
     })
   }
 
-  onCommentHoverOut = () => {
+  onCommentHoverOut = (e) => {
     this.setState({
       commentCount: 0
     })
@@ -188,7 +191,9 @@ class MyEditor extends Component {
   render() {
     return (
       <Fragment>
-      <h1>{this.state.commentCount}</h1>
+      {this.state.commentCount > 0 &&
+        <CommentCounter count={this.state.commentCount} top={this.state.top} />
+      }
       {this.state.showToolbar &&
         <Toolbar
           ref={this.toolbar}
