@@ -10,9 +10,13 @@ export default class extends Component {
     e.preventDefault()
     try {
       const newComment = await(await fetch('api/comments', {
-        method: 'POST',
-        body: JSON.stringify({
-          content: this.state.comment
+        'method': 'POST',
+        'headers': {
+          'content-type': 'application/json'
+        },
+        'body': JSON.stringify({
+          content: this.state.comment,
+          document: this.props.documentId
         })
       })).json()
       this.props.setCommentId(newComment.id)
