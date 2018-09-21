@@ -11,7 +11,7 @@ const pathMatch = require('path-match');
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const { parse } = require('url');
-const MONGO_URL = process.env.NODE_ENV !== 'production' ? process.env.DEV_URL : process.env.MONGO_URL
+const MONGO_URL = process.env.NODE_ENV !== 'production' ? process.env.DEV_URL : process.env.PROD_URL
 const dbName = process.env.NODE_ENV !== 'production' ? 'testing' : 'slate'
 const routes = require('./server/router.js');
 

@@ -11,6 +11,14 @@ const CommentsEditor = dynamic(
   }
 )
 
+const ReadOnlyEditor = dynamic(
+  import('../components/read-only-editor'),
+  {
+    loading: () => (<p>loading...</p>),
+    ssr: false
+  }
+)
+
 class Home extends Component {
   state = {
     mode: 'comment-view'
@@ -19,6 +27,17 @@ class Home extends Component {
   switchMode = (mode) => {
     this.setState({ mode }, () => console.log(this.state.mode))
   }
+
+  renderSwitch = (mode) => {
+    switch(mode) {
+      case 'comment-view':
+        return <CommentsEditor />
+      case 'read-only':
+        return <ReadOnlyEditor />
+      default:
+        return null
+    }
+  }
   render () {
     return (
       <div className='main'>
@@ -26,9 +45,7 @@ class Home extends Component {
         <Modebar
           changeMode={this.switchMode}
           currentMode={this.state.mode} />
-        { this.state.mode === 'comment-view' &&
-          <CommentsEditor />
-        }
+        {this.renderSwitch(this.state.mode)}
       <style jsx>{`
         .main {
           padding: 30px 342px 0 160px;
