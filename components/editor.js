@@ -160,6 +160,10 @@ class MyEditor extends Component {
       this.handleChange(change)
   }
 
+  onKeyDown = (e) => {
+    e.preventDefault()
+  }
+
   onCommentHoverIn = (id) => (e) => {
     const top = e.screenY - 145
     this.setState((prevState) => {
@@ -234,6 +238,7 @@ class MyEditor extends Component {
             onChange={this.handleChange}
             renderMark={this.renderMark}
             onBlur={() => this.setState({ showToolbar: false })}
+            onKeyDown={this.onKeyDown}
           />
         </div>
       }
