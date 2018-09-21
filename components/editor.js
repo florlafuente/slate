@@ -161,7 +161,9 @@ class MyEditor extends Component {
   }
 
   onKeyDown = (e) => {
+    console.log(e.key)
     e.preventDefault()
+    return false
   }
 
   onCommentHoverIn = (id) => (e) => {
@@ -239,6 +241,7 @@ class MyEditor extends Component {
             renderMark={this.renderMark}
             onBlur={() => this.setState({ showToolbar: false })}
             onKeyDown={this.onKeyDown}
+            spellCheck={false}
           />
         </div>
       }

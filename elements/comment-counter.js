@@ -6,8 +6,8 @@ export default (props) => (
     <style jsx>{`
       .counter-wrapper {
         position: absolute;
-        top: ${ props.top + 'px' };
-        right: 200px;
+        top: ${ props.top + 20 + 'px' };
+        left: 80px;
       }
       .counter-span {
         font-size: 25px;
