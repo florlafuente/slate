@@ -15,7 +15,10 @@ export default (props) => (
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        position: relative;
+        position: absolute;
+        z-index: 100;
+        top: ${ props.top + 'px' };
+        left: ${ props.left + 'px' }
       }
       .counter-wrapper:after {
         content: "";

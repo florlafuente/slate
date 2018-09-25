@@ -166,11 +166,13 @@ class MyEditor extends Component {
   }
 
   onCommentHoverIn = (id) => (e) => {
-    const top = e.screenY - 145
+    const top = e.clientY - 80
+    const left = e.clientX - 100
     this.setState((prevState) => {
       return {
         commentsIds: prevState.commentsIds.concat(id),
-        top: top 
+        top: top,
+        left: left
       }
     })
   }
@@ -213,7 +215,10 @@ class MyEditor extends Component {
     return (
       <Fragment>
       {this.state.commentsIds.length > 0 &&
-        <CommentCounter count={this.state.commentsIds.length} top={this.state.top} />
+        <CommentCounter
+          count={this.state.commentsIds.length}
+          top={this.state.top}
+          left={this.state.left} />
       }
       { this.state.comments && this.state.comments.length > 0 &&
         <CommentsGrid comments={this.state.comments} />
