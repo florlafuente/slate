@@ -19,13 +19,21 @@ const ReadOnlyEditor = dynamic(
   }
 )
 
+const StylesEditor = dynamic(
+  import('../components/styles-editor'),
+  {
+    loading: () => (<p>loading...</p>),
+    ssr: false
+  }
+)
+
 class Home extends Component {
   state = {
     mode: 'comment-view'
   }
 
   switchMode = (mode) => {
-    this.setState({ mode }, () => console.log(this.state.mode))
+    this.setState({ mode })
   }
 
   renderSwitch = (mode) => {
@@ -34,6 +42,8 @@ class Home extends Component {
         return <CommentsEditor />
       case 'read-only':
         return <ReadOnlyEditor />
+      case 'text-editor':
+        return <StylesEditor />
       default:
         return null
     }

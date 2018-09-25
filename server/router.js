@@ -16,7 +16,6 @@ const ObjectID = require('mongodb').ObjectID
     })
     .post(async (req, res, next) => {
       try {
-        console.log(req.body.content)
         const newDocument = await (req.db.collection('documents').insertOne({
           content: req.body.content
         }))

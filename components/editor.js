@@ -161,7 +161,6 @@ class MyEditor extends Component {
   }
 
   onKeyDown = (e) => {
-    console.log(e.key)
     e.preventDefault()
     return false
   }
@@ -173,7 +172,7 @@ class MyEditor extends Component {
         commentsIds: prevState.commentsIds.concat(id),
         top: top 
       }
-    }, () => console.log(this.state.commentsIds))
+    })
   }
 
   onCommentHoverOut = (e) => {

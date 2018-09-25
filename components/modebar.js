@@ -9,7 +9,15 @@ const modes = [
   {
     "mode": 'read-only',
     "value": 'Vista sólo lectura'
-  }
+  },
+  {
+    "mode": 'text-editor',
+    "value": 'Vista edición de texto'
+  },
+  {
+    "mode": 'add-contributions',
+    "value": 'Vista edición de texto + agregar aportes'
+  },
 ]
 
 export default ({ changeMode, currentMode }) => (
