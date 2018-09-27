@@ -177,7 +177,7 @@ class MyEditor extends Component {
     })
   }
 
-  onCommentHoverOut = (e) => {
+  onCommentHoverOut = (id) => (e) => {
     this.setState({
       commentsIds: []
     })
@@ -230,7 +230,7 @@ class MyEditor extends Component {
           left={this.state.left}
           >
           <ToolbarButton
-            function={(e) => this.handleHighlight(e)}>
+            function={this.handleHighlight}>
             <span>Agregar comentario</span>
           </ToolbarButton>
         </Toolbar>

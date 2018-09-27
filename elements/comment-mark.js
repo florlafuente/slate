@@ -5,7 +5,7 @@ const CommentMark = (props) => (
     className='comment'
     data-id={props.id}
     onMouseEnter={props.onMouseEnter(props.id)}
-    onMouseLeave={props.onMouseLeave}
+    onMouseLeave={props.onMouseLeave(props.id)}
     onClick={props.onClick(props.id)}>
     {props.children}
     <style jsx>{`

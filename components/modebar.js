@@ -12,7 +12,7 @@ const modes = [
   },
   {
     "mode": 'text-editor',
-    "value": 'Vista edición de texto'
+    "value": 'Edición simple'
   },
   {
     "mode": 'add-contributions',

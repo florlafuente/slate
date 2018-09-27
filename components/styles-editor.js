@@ -2,6 +2,16 @@ import React, { Component, Fragment, createRef } from 'react'
 import { Editor } from 'slate-react'
 import { Value, KeyUtils, Range, Change, Mark } from 'slate'
 import fetch from 'isomorphic-unfetch'
+import Icon from 'react-icons-kit'
+import { bold } from 'react-icons-kit/feather/bold'
+import { italic } from 'react-icons-kit/feather/italic'
+import { underline } from 'react-icons-kit/feather/underline'
+import StylesToolbar from './styles-toolbar'
+import BoldMark from '../elements/bold-mark'
+import ItalicMark from '../elements/italic-mark'
+import UnderlineMark from '../elements/underline-mark'
+import TitleMark from '../elements/title-mark'
+import StyleButton from '../elements/style-button'
 
 const initialValue = Value.fromJSON({
   document: {
@@ -47,20 +57,68 @@ class StylesEditor extends Component {
     }
   }
 
-  handleChange = ({ value }) => {
+  handleChange = async ({ value }) => {
+    if (value.document != this.state.value.document) {
+      const content = value.toJSON()
+      try {
+        const updatedContent = await(await fetch (`/api/documents/${this.state.documentId}`, {
+          'method': 'PUT',
+          'headers': {
+            'Content-Type': 'application/json'
+          },
+          'body': JSON.stringify({
+            'content': content
+          })
+        })).json()
+      } catch (err) {
+        console.error(err)
+      }
+    }
     this.setState({ value }) 
   }
 
+  onMarkClick = (type) => (e) => {
+    e.preventDefault()
+    const { value } = this.state
+    const change = value.change().toggleMark(type)
+    this.handleChange(change)
+  }
+
+  renderMark = (props) => {
+    switch (props.mark.type) {
+      case 'bold':
+        return  <BoldMark {...props} />
+      case 'italic':
+        return <ItalicMark {...props} />
+      case 'underline':
+        return <UnderlineMark {...props} />
+      case 'title':
+        return <TitleMark {...props} />
+      default:
+        return
+    }
+  }
+
   render() {
+    if (!this.state.value) return null
     return (
       <Fragment>
-      { this.state.value &&
-        <div
-          ref={this.myEditor}>
-          <Editor
-            value={this.state.value} />
-        </div>
-      }
+        <StylesToolbar>
+          <StyleButton onMarkClick={this.onMarkClick} type='bold'>
+            <Icon icon={bold} />
+          </StyleButton>
+          <StyleButton onMarkClick={this.onMarkClick} type='italic'>
+            <Icon icon={italic} />
+          </StyleButton>
+          <StyleButton onMarkClick={this.onMarkClick} type='underline'>
+            <Icon icon={underline} />
+          </StyleButton>
+        </StylesToolbar>
+        <Editor
+          value={this.state.value}
+          renderMark={this.renderMark}
+          spellCheck={false} 
+          onChange={this.handleChange} />
       </Fragment>
     )
   }
