@@ -27,6 +27,14 @@ const StylesEditor = dynamic(
   }
 )
 
+const NewVersionEditor = dynamic(
+  import('../components/new-version-editor'),
+  {
+    loading: () => (<p>loading...</p>),
+    ssr: false
+  }
+)
+
 class Home extends Component {
   state = {
     mode: 'comment-view'
@@ -44,6 +52,8 @@ class Home extends Component {
         return <ReadOnlyEditor />
       case 'text-editor':
         return <StylesEditor />
+      case 'comment-editor':
+        return <NewVersionEditor />
       default:
         return null
     }

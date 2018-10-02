@@ -71,6 +71,7 @@ const ObjectID = require('mongodb').ObjectID
               .map((id) => ObjectID(id))
           }
         }
+        if (req.query.status) query.status = req.query.status
         const results = await (req.db.collection('comments').find(query)).toArray()
         res.status(200).json({
           results: results
@@ -83,7 +84,8 @@ const ObjectID = require('mongodb').ObjectID
       try {
         const newComment = await (req.db.collection('comments').insertOne({
           content: req.body.content,
-          document: ObjectID(req.body.document)
+          document: ObjectID(req.body.document),
+          status: 'pending'
         }))
         res.status(200).json({
           id: newComment.insertedId
@@ -110,10 +112,11 @@ const ObjectID = require('mongodb').ObjectID
         const updateComment = await (req.db.collection('comments').updateOne(
           { _id: ObjectID(req.params.id) },
           { $set: {
-            content: req.body.content
+            content: req.body.content,
+            status: req.body.status
           }}
         ))
-        res.status(200).json(updateDocument)
+        res.status(200).json(updateComment)
       } catch (err) {
         next(err)
       }

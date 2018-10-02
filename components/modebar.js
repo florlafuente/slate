@@ -15,8 +15,8 @@ const modes = [
     "value": 'Edición simple'
   },
   {
-    "mode": 'add-contributions',
-    "value": 'Vista edición de texto + agregar aportes'
+    "mode": 'comment-editor',
+    "value": 'Edición con comentarios'
   },
 ]
 
